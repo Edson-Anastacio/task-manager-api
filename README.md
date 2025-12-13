@@ -1,7 +1,14 @@
-# Gerenciador de Tarefas Pessoais (JavaFX)
+# 📝 Gerenciador de Tarefas Pessoais (JavaFX)
 
-Projeto desenvolvido para a disciplina de **Linguagem de Programação 2**.
-O objetivo é uma aplicação Desktop para gerenciamento de tarefas pessoais (ToDo List) utilizando a arquitetura MVC.
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
+![JavaFX](https://img.shields.io/badge/javafx-%23FF0000.svg?style=for-the-badge&logo=java&logoColor=white)
+![Maven](https://img.shields.io/badge/maven-%23C71A36.svg?style=for-the-badge&logo=apachemaven&logoColor=white)
+
+> Projeto desenvolvido para a disciplina de **Linguagem de Programação 2**.
+> O objetivo é uma aplicação Desktop para gerenciamento de tarefas pessoais (ToDo List) utilizando a arquitetura MVC.
+
+## 📸 Demonstração
+<img src="assets/print-tela.png" alt="Tela do Sistema" width="700">
 
 ---
 
@@ -29,10 +36,7 @@ O sistema implementa um CRUD completo de tarefas com as seguintes funções:
 * ✏️ **Editar Tarefa:** Alteração de dados de tarefas já existentes.
 * 🗑️ **Remover Tarefa:** Exclusão de itens com confirmação de segurança via *Alert Dialog*.
 * ✔️ **Concluir:** Checkbox interativo na tabela para marcar/desmarcar tarefas como concluídas.
-* 🔍 **Filtros Dinâmicos:** Filtragem da lista em tempo real:
-    * *Todas*
-    * *Ativas (Pendentes)*
-    * *Concluídas*
+* 🔍 **Filtros Dinâmicos:** Filtragem da lista em tempo real (Todas / Ativas / Concluídas).
 
 ---
 
@@ -43,6 +47,15 @@ O projeto está organizado seguindo o padrão **Model-View-Controller**:
 * **Model:** Classes que representam os dados (`Task`) e a lógica de negócios (`TaskService`).
 * **View:** Arquivos `.fxml` que definem a interface visual (`main-view.fxml`, `task-dialog.fxml`).
 * **Controller:** Classes que conectam a tela à lógica (`MainController`, `TaskDialogController`).
+
+---
+
+## 🔮 Roadmap (Próximos Passos)
+Melhorias planejadas para as próximas versões, visando escalabilidade e arquitetura de microsserviços:
+
+- [ ] Integração com **Banco de Dados PostgreSQL** via **Docker**.
+- [ ] Refatoração do Back-end para **Spring Boot**.
+- [ ] Implementação de Login e múltiplos usuários.
 
 ---
 
@@ -66,4 +79,3 @@ Devido ao funcionamento dos módulos do JavaFX em versões recentes do JDK, **n�
     ```bash
     mvn javafx:run
     ```
-
