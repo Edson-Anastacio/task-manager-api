@@ -1,5 +1,6 @@
 package com.projeto.service;
 
+import com.projeto.TaskDAO; 
 import com.projeto.model.Task;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -7,13 +8,13 @@ import javafx.collections.ObservableList;
 public class TaskService {
 
     private static TaskService instance;
+    
     private final ObservableList<Task> tasks = FXCollections.observableArrayList();
+    
+    private final TaskDAO dao = new TaskDAO();
 
     private TaskService() {
-        // exemplo inicial (pode remover)
-        tasks.add(new Task("Estudar Lógica", "Estudar os capítulos 1 a 3", "Média"));
-        tasks.add(new Task("Fazer compras", "Comprar leite e pão", "Baixa"));
-        tasks.add(new Task("Projeto LP2", "Estruturar repositório e README", "Alta"));
+        atualizarListaDoBanco();
     }
 
     public static TaskService getInstance(){
@@ -21,11 +22,28 @@ public class TaskService {
         return instance;
     }
 
-    public ObservableList<Task> getTasks(){ return tasks; }
+    public ObservableList<Task> getTasks(){ 
+        return tasks; 
+    }
 
-    public void add(Task t){ tasks.add(t); }
+    // === MÉTODOS QUE CONECTAM TELA <-> BANCO ===
 
-    public void remove(Task t){ tasks.remove(t); }
+    public void atualizarListaDoBanco() {
+        tasks.clear(); 
+        tasks.addAll(dao.listarTodas()); 
+    }
 
-    // substitui: editar em memória - basta alterar propriedades do Task já presente
+    public void add(Task t){ 
+        dao.adicionar(t); 
+        tasks.add(t);     
+    }
+
+    public void remove(Task t){ 
+        dao.deletar(t);   
+        tasks.remove(t);  
+    }
+    
+    public void update(Task t) {
+        dao.atualizar(t); 
+    }
 }
