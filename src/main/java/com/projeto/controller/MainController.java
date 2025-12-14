@@ -130,12 +130,22 @@ public class MainController {
         table.refresh();
     }
 
+    // --- AQUI ESTÁ A MUDANÇA PARA O CSS ---
     private Task showTaskDialog(Task toEdit) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/task-dialog.fxml"));
+        
+        javafx.scene.Parent root = loader.load();
+        
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle(toEdit == null ? "Adicionar Tarefa" : "Editar Tarefa");
-        stage.setScene(new Scene(loader.load()));
+        
+        Scene scene = new Scene(root);
+
+        String cssPath = getClass().getResource("/css/styles.css").toExternalForm();
+        scene.getStylesheets().add(cssPath);
+        
+        stage.setScene(scene);
         
         TaskDialogController ctrl = loader.getController();
         if (toEdit != null) ctrl.setTask(toEdit);

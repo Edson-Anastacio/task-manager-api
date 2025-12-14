@@ -11,6 +11,11 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("/view/main-view.fxml"));
         Scene scene = new Scene(loader.load());
+
+        String cssPath = getClass().getResource("/css/styles.css").toExternalForm();
+        scene.getStylesheets().add(cssPath);
+        // ---------------------------------
+
         stage.setTitle("Gerenciador de Tarefas");
         stage.setScene(scene);
         stage.setWidth(700);
@@ -22,4 +27,3 @@ public class Main extends Application {
         launch();
     }
 }
-
