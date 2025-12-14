@@ -31,11 +31,15 @@ public class MainController {
 
     @FXML
     public void initialize(){
+        // --- ALTERAÇÃO AQUI: CORREÇÃO DO ESPAÇO VAZIO ---
+        // Isso força as colunas a ocuparem a largura total da tabela
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+        // ------------------------------------------------
+
         colTitulo.setCellValueFactory(cell -> cell.getValue().tituloProperty());
         colPrioridade.setCellValueFactory(cell -> cell.getValue().prioridadeProperty());
         colConcluida.setCellValueFactory(new PropertyValueFactory<>("concluida"));
 
-        // Carrega a lista que vem do Banco (via Service)
         filtered = new FilteredList<>(service.getTasks(), t -> true);
         table.setItems(filtered);
 
@@ -43,23 +47,36 @@ public class MainController {
         filterCombo.setValue("Todas");
         filterCombo.valueProperty().addListener((obs, oldV, newV) -> applyFilter(newV));
 
-        // Desabilitar botões quando não houver seleção
         btnEditar.disableProperty().bind(Bindings.isNull(table.getSelectionModel().selectedItemProperty()));
         btnRemover.disableProperty().bind(Bindings.isNull(table.getSelectionModel().selectedItemProperty()));
         btnToggleConcluida.disableProperty().bind(Bindings.isNull(table.getSelectionModel().selectedItemProperty()));
 
-        // Checkbox Visual na Tabela
+        // Configuração do CheckBox Clicável
         colConcluida.setCellFactory(tc -> new TableCell<Task, Boolean>() {
+            private final CheckBox cb = new CheckBox();
+
+            {
+                cb.setOnAction(event -> {
+                    Task task = getTableView().getItems().get(getIndex());
+                    
+                    if (task != null) {
+                        task.setConcluida(cb.isSelected());
+                        
+                        service.update(task);
+                        
+                        table.refresh(); 
+                    }
+                });
+            }
+
             @Override
             protected void updateItem(Boolean concluida, boolean empty) {
                 super.updateItem(concluida, empty);
-                if (empty) {
+                if (empty || concluida == null) {
                     setGraphic(null);
                 } else {
-                    CheckBox cb = new CheckBox();
-                    cb.setDisable(true); // Apenas visual
-                    cb.setSelected(concluida != null && concluida);
-                    setGraphic(cb);
+                    cb.setSelected(concluida);
+                    setGraphic(cb); 
                 }
             }
         });
@@ -82,7 +99,6 @@ public class MainController {
     public void onAdicionar() throws IOException {
         Task novo = showTaskDialog(null);
         if (novo != null) {
-            // O Service já adiciona no banco e na lista
             service.add(novo); 
         }
     }
@@ -92,14 +108,11 @@ public class MainController {
         Task selec = table.getSelectionModel().getSelectedItem();
         if (selec == null) return;
 
-        // Abre a janela de edição
         Task resultado = showTaskDialog(selec);
         
-        // Se o usuário salvou a edição...
         if (resultado != null) {
-            // AVISAMOS O BANCO DE DADOS AGORA:
             service.update(selec); 
-            table.refresh(); // Atualiza a tela
+            table.refresh(); 
         }
     }
 
@@ -112,7 +125,7 @@ public class MainController {
         Optional<ButtonType> opt = alert.showAndWait();
         
         if (opt.isPresent() && opt.get() == ButtonType.YES){
-            service.remove(selec); // Remove do banco e da lista
+            service.remove(selec); 
         }
     }
 
@@ -121,16 +134,11 @@ public class MainController {
         Task selec = table.getSelectionModel().getSelectedItem();
         if (selec == null) return;
         
-        // Inverte o status na memória
         selec.setConcluida(!selec.isConcluida());
-        
-        // SALVA NO BANCO DE DADOS
         service.update(selec); 
-        
         table.refresh();
     }
 
-    // --- AQUI ESTÁ A MUDANÇA PARA O CSS ---
     private Task showTaskDialog(Task toEdit) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/task-dialog.fxml"));
         

@@ -1,37 +1,31 @@
 /* === TEMA PREMIUM DARK (Modern SaaS Style) === */
 .root {
-    /* Fundo bem escuro, quase preto, para dar profundidade */
     -fx-background-color: #121212; 
     -fx-font-family: "Segoe UI Semibold", "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-size: 14px;
 }
 
-/* Garante legibilidade total */
 .label {
     -fx-text-fill: #e0e0e0;
 }
 
-/* === BOTÕES "GLOW" (O destaque do Premium) === */
+/* === BOTÕES === */
 .button {
-    /* Gradient moderno (Roxo para Azul) */
     -fx-background-color: linear-gradient(to right, #6c5ce7, #a29bfe);
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-background-radius: 20; /* Bem redondo (Pill shape) */
+    -fx-background-radius: 20; 
     -fx-border-radius: 20;
     -fx-border-color: transparent;
     -fx-padding: 8px 20px;
     -fx-cursor: hand;
-    
-    /* Sombra suave para dar efeito 3D */
     -fx-effect: dropshadow(three-pass-box, rgba(108, 92, 231, 0.4), 10, 0, 0, 4);
 }
 
 .button:hover {
-    /* Fica mais brilhante ao passar o mouse */
     -fx-background-color: linear-gradient(to right, #8071ea, #b1a9ff);
     -fx-effect: dropshadow(three-pass-box, rgba(108, 92, 231, 0.7), 15, 0, 0, 5);
-    -fx-translate-y: -1; /* Sobe levemente */
+    -fx-translate-y: -1; 
 }
 
 .button:pressed {
@@ -40,52 +34,60 @@
     -fx-translate-y: 1;
 }
 
-/* Botão de Remover (Estilo "Danger" sutil) */
-/* Se quiser aplicar especificamente, teria que adicionar styleClass no Java, 
-   mas aqui deixei o hover genérico bonito. */
-
-/* === TABELA "CARD" (Flutuante) === */
+/* === TABELA SEM LINHAS BRANCAS === */
 .table-view {
-    -fx-background-color: #1e1e1e; /* Um pouco mais claro que o fundo */
+    -fx-background-color: #1e1e1e; 
     -fx-background-radius: 10;
     -fx-border-radius: 10;
     -fx-padding: 5;
-    /* Sombra ao redor da tabela inteira */
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 20, 0, 0, 5);
+
+    /* --- O SEGREDO: Remove a pintura da grade padrão --- */
+    -fx-table-cell-border-color: transparent; 
+    -fx-table-header-border-color: transparent;
 }
 
-/* Cabeçalho Limpo e Moderno */
+/* Remove a linha de foco azul ao clicar na tabela */
+.table-view:focused {
+    -fx-background-color: #1e1e1e;
+    -fx-background-insets: 0;
+    -fx-background-radius: 10;
+}
+
+/* Cabeçalho */
 .table-view .column-header-background {
     -fx-background-color: transparent;
     -fx-background-radius: 10 10 0 0;
-    -fx-border-width: 0 0 1 0; /* Apenas linha embaixo */
+    -fx-border-width: 0 0 1 0; 
     -fx-border-color: #333333;
 }
 
-.table-view .column-header, .table-view .filler {
+.table-view .column-header-background .filler,
+.table-view .column-header,
+.table-view .column-header .label {
     -fx-background-color: transparent;
-    -fx-size: 45px;
-    -fx-border-color: transparent;
+    -fx-border-width: 0 0 1 0; 
+    -fx-border-color: transparent transparent #333333 transparent;
 }
 
 .table-view .column-header .label {
-    -fx-text-fill: #a29bfe; /* Cor do acento para os títulos */
+    -fx-text-fill: #a29bfe; 
     -fx-font-weight: bold;
     -fx-font-size: 13px;
     -fx-alignment: CENTER-LEFT;
     -fx-padding: 0 0 0 10;
 }
 
-/* Linhas da Tabela */
+/* Linhas da Tabela (Rows) */
 .table-row-cell {
     -fx-background-color: transparent;
-    -fx-border-color: transparent transparent #2d2d2d transparent; /* Linha separadora sutil */
-    -fx-border-width: 1;
-    -fx-padding: 5 0; /* Mais espaço entre as linhas (respiro) */
+    -fx-border-color: transparent transparent #2d2d2d transparent; /* Apenas linha sutil embaixo */
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 5 0; 
 }
 
 .table-row-cell:odd {
-    -fx-background-color: rgba(255, 255, 255, 0.02); /* Muito sutil */
+    -fx-background-color: rgba(255, 255, 255, 0.02); 
 }
 
 .table-row-cell:hover {
@@ -93,39 +95,45 @@
 }
 
 .table-row-cell:selected {
-    /* Seleção com gradient sutil e borda lateral */
     -fx-background-color: linear-gradient(to right, rgba(108, 92, 231, 0.2), transparent);
     -fx-border-color: transparent transparent transparent #6c5ce7;
-    -fx-border-width: 0 0 0 4; /* Borda grossa na esquerda */
+    -fx-border-width: 0 0 0 4; 
 }
 
+/* Remove a borda da coluna vazia extra na direita */
+.table-view .filler {
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+}
+
+/* Células Individuais - IMPORTANTE */
 .table-cell {
     -fx-text-fill: #f5f6fa;
     -fx-alignment: CENTER-LEFT;
     -fx-font-size: 14px;
+    -fx-border-color: transparent; /* Garante que a célula não desenhe borda */
 }
 .table-cell .label {
     -fx-text-fill: #f5f6fa;
 }
 
-/* === INPUTS (Campos de Texto) === */
+/* === INPUTS === */
 .text-field, .text-area, .combo-box {
     -fx-background-color: #2d2d2d;
     -fx-text-fill: white;
     -fx-prompt-text-fill: #636e72;
     -fx-background-radius: 10;
     -fx-border-color: transparent;
-    -fx-padding: 10; /* Inputs mais gordinhos */
+    -fx-padding: 10; 
 }
 
 .text-field:focused, .text-area:focused, .combo-box:focused {
     -fx-background-color: #353535;
-    -fx-border-color: #6c5ce7; /* Borda roxa ao clicar */
+    -fx-border-color: #6c5ce7; 
     -fx-border-radius: 10;
     -fx-effect: dropshadow(three-pass-box, rgba(108, 92, 231, 0.3), 10, 0, 0, 0);
 }
 
-/* === COMBO BOX === */
 .combo-box .arrow-button {
     -fx-background-color: transparent;
 }
@@ -145,29 +153,38 @@
     -fx-background-color: #6c5ce7;
 }
 
-/* === CHECKBOX === */
-.check-box .box {
-    -fx-background-color: #2d2d2d;
-    -fx-border-color: #636e72;
-    -fx-border-radius: 4;
-}
-.check-box:selected .mark {
-    -fx-background-color: #6c5ce7;
-}
-.check-box:selected .box {
-    -fx-border-color: #6c5ce7;
-}
-/* === CORREÇÃO DA TELA BRANCA NA DESCRIÇÃO === */
 .text-area .content {
-    -fx-background-color: #2d2d2d; /* Fundo escuro igual aos outros */
+    -fx-background-color: #2d2d2d;
     -fx-background-radius: 10;
 }
-
 .text-area {
-    -fx-text-fill: white; /* Garante que o texto digitado seja branco */
+    -fx-text-fill: white;
+}
+.text-area:focused .content {
+    -fx-background-color: #353535;
 }
 
-/* Quando clica para digitar na descrição */
-.text-area:focused .content {
-    -fx-background-color: #353535; /* Fica levemente mais claro no foco */
+/* === CHECKBOX VERDE NEON === */
+.check-box .box {
+    -fx-background-color: transparent;
+    -fx-border-color: #636e72;
+    -fx-border-radius: 3px;
+    -fx-border-width: 2px;
+    -fx-cursor: hand;
+}
+
+.check-box:selected .box {
+    -fx-background-color: #00E676; 
+    -fx-border-color: #00E676;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: black;
+    -fx-shape: "M 0 0 L 4 4 L 11 -5"; 
+    -fx-scale-shape: false; 
+}
+
+.check-box:hover .box {
+    -fx-border-color: #00E676; 
+    -fx-background-color: rgba(0, 230, 118, 0.1);
 }

@@ -3,6 +3,7 @@ package com.projeto;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image; 
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -14,7 +15,13 @@ public class Main extends Application {
 
         String cssPath = getClass().getResource("/css/styles.css").toExternalForm();
         scene.getStylesheets().add(cssPath);
-        // ---------------------------------
+
+        try {
+            Image appIcon = new Image(getClass().getResourceAsStream("/images/icon.png"));
+            stage.getIcons().add(appIcon);
+        } catch (Exception e) {
+            System.out.println("Aviso: Ícone não encontrado ou erro ao carregar. Usando padrão.");
+        }
 
         stage.setTitle("Gerenciador de Tarefas");
         stage.setScene(scene);
