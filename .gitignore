@@ -15,3 +15,4 @@ bin/
 # Arquivos de sistema e temporários
 .DS_Store
 *.log
+dependency-reduced-pom.xml
