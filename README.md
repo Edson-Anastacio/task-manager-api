@@ -25,6 +25,7 @@
 * **Linguagem:** Java 25 (OpenJDK - Eclipse Adoptium)
 * **Interface Gráfica:** JavaFX 23.0.1
 * **Banco de Dados:** PostgreSQL (via Docker)
+* **Automação:** DockerService (Java ProcessBuilder)
 * **Gerenciador de Dependências:** Apache Maven
 * **IDE:** Visual Studio Code
 
@@ -32,13 +33,14 @@
 
 ## ⚙️ Funcionalidades
 
-O sistema implementa um CRUD completo conectado a um banco de dados real:
+O sistema implementa um CRUD completo com infraestrutura automatizada:
 
-* ✅ **Persistência Real:** As tarefas são salvas no PostgreSQL e não são perdidas ao fechar o programa.
+* ✅ **Auto-Bootstrap:** O sistema verifica, baixa e inicia o container do Docker automaticamente ao abrir.
+* ✅ **Persistência Real:** As tarefas são salvas no PostgreSQL.
 * ➕ **Adicionar Tarefa:** Criação de novas tarefas com Título, Descrição e Prioridade.
 * ✏️ **Editar Tarefa:** Alteração de dados com atualização imediata no banco de dados.
 * 🗑️ **Remover Tarefa:** Exclusão definitiva do registro no banco.
-* ✔️ **Status:** Checkbox interativo que salva o estado (pendente/concluída) no banco.
+* ✔️ **Status:** Checkbox interativo que salva o estado (pendente/concluída).
 * 🔍 **Filtros Dinâmicos:** Filtragem visual (Todas / Ativas / Concluídas).
 
 ---
@@ -50,8 +52,8 @@ O projeto evoluiu para incluir a camada de acesso a dados, garantindo separaçã
 * **Model:** Representação dos dados (`Task`).
 * **View:** Interface visual (`.fxml`).
 * **Controller:** Lógica de interação com o usuário.
-* **DAO (Data Access Object):** Classe responsável por executar os comandos SQL e isolar o banco da aplicação (`TaskDAO`).
-* **Service:** Regras de negócio e ponte entre Controller e DAO.
+* **DAO:** Acesso ao Banco de Dados e criação automática de tabelas (`TaskDAO`).
+* **Service:** Lógica de infraestrutura (`DockerService`) e regras de negócio (`TaskService`).
 
 ### 📂 Estrutura de Pastas
 ```text
@@ -67,16 +69,17 @@ src/main/java/com/projeto
 ├── service         # Regras de Negócio
 │   └── TaskService.java
 │
-├── TaskDAO.java    # Acesso ao Banco de Dados (SQL)
-├── Launcher.java   # Ponto de entrada
-├── Main.java       # Classe Principal
-└── SetupBanco.java # Utilitário para criar a tabela no banco
+├── DockerService.java # Automação: Gerencia o container Docker
+├── TaskDAO.java       # Acesso ao Banco: CRUD + Criação de Tabela
+├── Launcher.java      # Ponto de entrada (Inicializa Docker + App)
+└── Main.java          # Classe Principal JavaFX
 ```
 ---
 
 ## 🔮 Roadmap (Progresso)
 
 - [x] Integração com **Banco de Dados PostgreSQL** via **Docker**.
+- [x] Implementação de **Auto-Bootstrap** (Inicialização automática do ambiente).
 - [ ] Refatoração do Back-end para **Spring Boot**.
 - [ ] Implementação de Login e múltiplos usuários.
 
@@ -86,36 +89,27 @@ src/main/java/com/projeto
 
 ### 1. Pré-requisitos
 * JDK 21 ou superior (Configurado para Java 25).
-* **Docker Desktop** instalado e em execução.
+* **Docker Desktop** instalado e aberto.
 * Maven.
 
-### 2. Configurando o Banco de Dados (Docker)
-Antes de executar a aplicação pela primeira vez, é necessário criar o ambiente do banco de dados:
-1. **Subir o Container:** Abra o terminal e rode:
+### 2. Executando a Aplicação
 
-```bash
-docker run --name banco-tarefas -e POSTGRES_PASSWORD=minhasenha -p 5432:5432 -d postgres
-```
-2. **Criar a Tabela (Importante!):**
-* No VS Code, abra o arquivo `src/main/java/com/projeto/SetupBanco.java`.
-* Clique em **Run** (Executar)
-* Aguarde a mensagem: "Tabela 'tarefas' criada com sucesso no Docker!"
-
-### 3. Executando a Aplicação
-**Opção 1 (Via VS Code - Recomendada):**
-1. Abra o arquivo `src/main/java/com/projeto/Launcher.java`.
+1. Abra o arquivo `src/main/java/com/projeto/Launcher.java`
 2. Clique em **Run**
+ - **O que acontece nos bastidores?** Ao clicar em Run, o `Launcher` chama o `DockerService`, que verifica se o container `banco-tarefas` existe. Se não existir, ele cria e inicia o PostgreSQL automaticamente. Em seguida, o `TaskDAO` cria a tabela `tarefas` se ela ainda não existir
 
-**Opção 2 (Via Terminal):**
-```bash
-mvn javafx:run
-```
----
+ **Opção via Terminal:**
+ 
+ ```bash
+ mvn javafx:run
+ ```
+
+
 ## ❓ Solução de Problemas Comuns
-**Erro "Port 5432 is already allocated"**
+**Erro: "Docker não encontrado" ou erro ao iniciar**
 
-Significa que já existe um PostgreSQL rodando na sua máquina ocupando a porta padrão. Solução: Pare o serviço local do Postgres ou mude a porta do Docker para `5433:5432` (lembre-se de alterar a URL de conexão no `TaskDAO.java`).
+Certifique-se de que o aplicativo **Docker Desktop** está aberto no seu Windows antes de rodar o projeto.
 
-**Erro "No suitable driver found"**
+**Erro: "Port 5432 is already allocated"**
 
-Significa que o Maven não baixou a dependência do PostgreSQL. **Solução:** Clique com botão direito no `pom.xml` > **Reload Project.**
+Significa que já existe um outro PostgreSQL rodando na sua máquina. **Solução:** Pare o serviço local do Postgres ou altere a porta no arquivo `DockerService.java` para `5433:5432`.
