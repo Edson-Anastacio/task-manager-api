@@ -5,30 +5,39 @@
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
 
-> Projeto desenvolvido para a disciplina de **Linguagem de Programação 2**.
-> Aplicação Desktop para gerenciamento de tarefas (ToDo List) com **persistência de dados em PostgreSQL** containerizado.
+> **Solução Desktop de Alta Produtividade**
+>
+> Sistema de gerenciamento de tarefas robusto com **persistência de dados automatizada** via containers. O foco do projeto foi criar uma experiência "Zero Config" para o usuário final, onde a aplicação gerencia sua própria infraestrutura de banco de dados.
 
 ## 📸 Demonstração
 <img src="assets/print-tela.png" alt="Tela do Sistema" width="700">
 
 ---
 
-## 👨‍💻 Autor
-
-* **Nome:** Julio Edson Anastácio Rêgo
-* **Matrícula:** 20230054260
+## 👨‍💻 Desenvolvedor
+**Julio Edson Anastácio Rêgo**
+* [LinkedIn](https://www.linkedin.com/in/edson-anastacio-dev/)
+* [GitHub](https://github.com/Edson-Anastacio)
 
 ---
 
-## 🚀 Tecnologias Utilizadas
+## 🚀 Diferenciais Técnicos
 
-* **Linguagem:** Java 25 (OpenJDK - Eclipse Adoptium)
-* **Interface Gráfica:** JavaFX 23.0.1
-* **Banco de Dados:** PostgreSQL (via Docker)
-* **Automação:** DockerService (Java ProcessBuilder)
-* **Gerenciador de Dependências:** Apache Maven
-* **IDE:** Visual Studio Code
+Este não é apenas um CRUD simples. O sistema foi projetado com conceitos de **DevOps embarcado**:
 
+* ✅ **Auto-Bootstrap Docker:** Ao iniciar, a aplicação Java detecta se o ambiente Docker está rodando, baixa a imagem do PostgreSQL e sobe o container automaticamente via `ProcessBuilder`.
+* ✅ **Arquitetura em Camadas:** Separação estrita entre Interface (View), Regra de Negócio (Service) e Acesso a Dados (DAO).
+* ✅ **Persistência Real:** Nada de dados em memória. Tudo é transacional no PostgreSQL.
+
+---
+
+## 🛠 Stack Tecnológica
+
+* **Linguagem:** Java 21 LTS
+* **Interface:** JavaFX 23 (Modular)
+* **Banco de Dados:** PostgreSQL 16 (Containerizado)
+* **Build Tool:** Apache Maven
+* **Infraestrutura:** Docker & Docker API
 ---
 
 ## ⚙️ Funcionalidades
@@ -45,15 +54,22 @@ O sistema implementa um CRUD completo com infraestrutura automatizada:
 
 ---
 
-## 🏗️ Arquitetura do Projeto (MVC + DAO)
+## 🏗️ Arquitetura (MVC + DAO)
 
-O projeto evoluiu para incluir a camada de acesso a dados, garantindo separação de responsabilidades:
+O projeto segue padrões de design para garantir manutenibilidade:
 
-* **Model:** Representação dos dados (`Task`).
-* **View:** Interface visual (`.fxml` e CSS).
-* **Controller:** Lógica de interação com o usuário.
-* **DAO:** Acesso ao Banco de Dados e criação automática de tabelas (`TaskDAO`).
-* **Service:** Lógica de infraestrutura (`DockerService`) e regras de negócio (`TaskService`).
+```mermaid
+graph LR
+A[View - FXML] --> B[Controller]
+B --> C[Service Layer]
+C --> D[DAO Layer]
+D --> E[(PostgreSQL Docker)]
+```
+* **Model**: Representação de Entidades (```Task```).
+* **View**: Interface visual desacoplada (```.fxml```).
+* **Controller**: Orquestração de eventos.
+* **DAO (Data Access Object)**: Abstração do SQL e gestão de conexões JDBC.
+* **DockerService**: Módulo exclusivo para orquestração de containers via código Java.
 
 ### 📂 Estrutura de Pastas
 ```text
@@ -78,38 +94,38 @@ src/main/java/com/projeto
 
 ## 🔮 Roadmap (Progresso)
 
-- [x] Integração com **Banco de Dados PostgreSQL** via **Docker**.
-- [x] Implementação de **Auto-Bootstrap** (Inicialização automática do ambiente).
-- [ ] Refatoração do Back-end para **Spring Boot**.
-- [ ] Implementação de Login e múltiplos usuários.
+- [x] Integração com Banco de Dados PostgreSQL via Docker.
+- [x] Implementação do Service de Auto-Bootstrap.
+- [ ] Refatoração para API REST com **Spring Boot 3.**
+- [ ] Migração da Interface para Web (React/Angular).
 
 ---
 
-## 🛠️ Como Rodar o Projeto
+## 🛠️ Como Executar
 
 ### 1. Pré-requisitos
-* JDK 21 ou superior (Configurado para Java 25).
-* **Docker Desktop** instalado e aberto.
-* Maven.
+* **Java JDK 21** ou superior.
+* **Docker Desktop** instalado e em execução.
+* **Maven**.
 
 ### 2. Executando a Aplicação
+Não é necessário configurar o banco de dados manualmente. O sistema fará o provisioning automático.
 
-1. Abra o arquivo `src/main/java/com/projeto/Launcher.java`
-2. Clique em **Run**
- - **O que acontece nos bastidores?** Ao clicar em Run, o `Launcher` chama o `DockerService`, que verifica se o container `banco-tarefas` existe. Se não existir, ele cria e inicia o PostgreSQL automaticamente. Em seguida, o `TaskDAO` cria a tabela `tarefas` se ela ainda não existir
+```bash
+# 1. Clone o repositório
+git clone https://github.com/Edson-Anastacio/task-manager-api.git
 
- **Opção via Terminal:**
- 
- ```bash
- mvn javafx:run
- ```
+# 2. Entre na pasta
+cd task-manager-api
 
-
+# 3. Execute via Maven
+mvn javafx:run
+```
 ## ❓ Solução de Problemas Comuns
-**Erro: "Docker não encontrado" ou erro ao iniciar**
 
-Certifique-se de que o aplicativo **Docker Desktop** está aberto no seu Windows antes de rodar o projeto.
+**Erro: "Docker não encontrado" ou erro ao iniciar**
+> Certifique-se de que o aplicativo **Docker Desktop** está aberto antes de rodar o comando.
 
 **Erro: "Port 5432 is already allocated"**
-
-Significa que já existe um outro PostgreSQL rodando na sua máquina. **Solução:** Pare o serviço local do Postgres ou altere a porta no arquivo `DockerService.java` para `5433:5432`.
+> Significa que já existe um outro PostgreSQL rodando na sua máquina.
+> **Solução:** Pare o serviço local do Postgres ou altere a porta no arquivo `DockerService.java`.
